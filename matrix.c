@@ -27,11 +27,15 @@ void printMatrix(double **arr, int row, int col) {
 }
 
 double** matrixMultiplication(double **arr1, double **arr2, int row1, int col1, int row2, int col2) {
+    if (col1 != row2) {
+        return NULL; 
+    }
+
     double **matrix = initialize(row1, col2);
     for (int i = 0; i < row1; i++) {
         for (int j = 0; j < col2; j++) {
-            for (int x = 0; x < row2; x++) {
-                matrix[i][j] = arr1[i][x] * arr2[x][j];
+            for (int k = 0; k < col1; k++) {
+                matrix[i][j] += arr1[i][k] * arr2[k][j];
             }
         }
     }
@@ -119,11 +123,12 @@ int main(int argc, char* argv[argc + 1]) {
             if (col != row1) {
                 printf("Matrices cannot be multiplied, as dimensions are not compatible.\n");
                 freeMatrix(arr, row1);
+            } else {
+                double **result = matrixMultiplication(matrix, arr, row, col, row1, col1);
+                printMatrix(result, row, col1);
+                freeMatrix(result, row);
+                freeMatrix(arr, row1);
             }
-            double **result = matrixMultiplication(matrix, arr, row, col, row1, col1);
-            printMatrix(result, row, col1);
-            freeMatrix(arr, row1);
-            freeMatrix(result, row);
         }
         printf("If you would like to find the product between two other matrices, or find a new determinant, enter 0. If not, enter 1:\n");
         scanf("%d", &s);
